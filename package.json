@@ -8,7 +8,7 @@
     "build": "webpack"
   },
   "keywords": [],
-  "author": "",
+  "author": "vktrn",
   "license": "ISC",
   "dependencies": {
     "konva": "^8.3.11",
