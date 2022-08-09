@@ -32,7 +32,7 @@ module.exports = {
   },
   plugins: [
     new htmlWebpackPlugin({
-      template: path.resolve(__dirname, './src/public/index.html')
+      template: path.resolve(__dirname, './public/index.html')
     }),
     new ReactRefreshWebpackPlugin(),
     new MiniCssExtractPlugin()
