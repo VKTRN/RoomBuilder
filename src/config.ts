@@ -4,9 +4,16 @@ export const stage = {
 }
 
 export const rect = {
-  x:100,
-  y:100,
+  x: 100,
+  y: 100,
   width:100,
   height:100,
-  fill:"darkviolet"
+  fill:"darkviolet",
+}
+
+export const line = {
+  x: 100,
+  points:[0, 0, 100, 0],
+  stroke:"black",
+  strokeWidth:5
 }

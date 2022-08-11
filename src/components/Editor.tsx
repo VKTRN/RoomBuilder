@@ -1,21 +1,16 @@
-import {Stage}      from 'react-konva'
-import {Layer}      from 'react-konva'
-import {Rect}       from 'react-konva'
+import {useState}   from 'react'
+import {useEffect}  from 'react'
 import {useRef}     from 'react' 
 import {stage}      from '../config'
 import {rect}       from '../config'
+import {line}       from '../config'
 
 export const Editor = () => {
 
-  const stageRef = useRef(null);
+  const [y, setY] = useState(100)
 
   return (
     <div className = 'editor'>
-      <Stage {...stage} ref={stageRef}>
-        <Layer>
-          <Rect {...rect} draggable/>
-        </Layer>
-      </Stage>
     </div>
   )
 }
