@@ -4,4 +4,5 @@ export type rectangle = {
   width: number,
   height: number,
   fill: string,
+  onMouseDown: any,
 }
