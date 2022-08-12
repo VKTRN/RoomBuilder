@@ -1,0 +1,10 @@
+.line{
+  stroke: transparent;
+  stroke-width: 12;
+  stroke-linecap: round;
+
+  &:hover{
+    stroke: lime;
+  }
+}
+

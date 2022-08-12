@@ -4,5 +4,9 @@ export type rectangle = {
   width: number,
   height: number,
   fill: string,
-  onMouseDown: any,
+}
+
+export type point = {
+  x: number,
+  y: number,
 }
