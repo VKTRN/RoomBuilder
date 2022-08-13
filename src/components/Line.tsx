@@ -1,12 +1,12 @@
-// import {rectangle} from '../types'
+import {useRef} from 'react' 
+import {AddButton} from './AddButton'
 
 export const Line = ({i,points,setPoints, direction}:any) => {
 
-  const i2 = i + 1 === points.length ? 0 : i + 1
+  const lineRef = useRef<SVGLineElement>(null)
+  const addRef  = useRef<SVGGElement>(null)
   
   const handleMouseMove = (e:any) => {
-    console.log('handleMouseMove')
-    console.log(direction)
     setPoints(prev => {
       const newPoints = [...prev]
 
@@ -19,7 +19,6 @@ export const Line = ({i,points,setPoints, direction}:any) => {
       if(direction === 'vertical'){
         newPoints[i].x += e.movementX
         newPoints[i2].x += e.movementX
-        console.log(newPoints)
       }
       return newPoints
     }
@@ -32,10 +31,36 @@ export const Line = ({i,points,setPoints, direction}:any) => {
   }
   
   const handleMouseDown = () => {
-    console.log('handleMouseDown')
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup', handleMouseUp)
   }
+  
+  const handleMouseEnter = () => {
+    lineRef.current.classList.add('active')
+    addRef.current.classList.add('active')
+  }
 
-  return <line className = 'line' x1={points[i].x} x2={points[i2].x} y1={points[i].y} y2={points[i2].y} onMouseDown = {handleMouseDown}/>
+  const handleMouseLeave = () => {
+    lineRef.current.classList.remove('active')
+    addRef.current.classList.remove('active')
+  }
+
+  const i2 = i + 1 === points.length ? 0 : i + 1
+
+  const {x:x1, y:y1} = points[i]
+  const {x:x2, y:y2} = points[i2]
+  const line         = {x1, y1, x2, y2}
+
+  const handlers = {
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: handleMouseLeave,
+  }
+
+  return (
+    <>
+      <line className='hitbox-line' {...line} {...handlers} />
+      <line className='line' {...line} onMouseDown = {handleMouseDown} ref={lineRef}/>
+      <AddButton {...line} addRef={addRef}/>
+    </>
+  )
 }
