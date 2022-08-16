@@ -11,8 +11,15 @@ export const getPolyline = (points: point[]) => {
 export const getDirection = (p1: any, p2: any) => {
   
   const dx = p2.x - p1.x
+  const dy = p2.y - p1.y
   
-  return dx === 0 ? 'vertical' : 'horizontal'
+  if (dx === 0 && dy === 0) {
+    return 'none'
+  }
+  if (dx === 0) {
+    return 'vertical'
+  }
+  return 'horizontal'
 }
 
 export const isInside = (polygon: any, point: any) => {
@@ -30,4 +37,21 @@ export const isInside = (polygon: any, point: any) => {
     }
   }
   return isInside
+}
+
+export const getShift = (direction: string) => {
+  if (direction === 'horizontal') {return {x:0, y:-30}}
+  return {x:30, y:0}
+}
+
+export const clone = (obj: any) => {
+  return JSON.parse(JSON.stringify(obj))
+}
+
+export const insert = (arr:any[], index:number, newElements:any[]) => {
+  return [
+    ...arr.slice(0, index),
+    ...newElements,
+    ...arr.slice(index)
+  ]
 }

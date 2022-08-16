@@ -1,14 +1,18 @@
 import {useRef} from 'react' 
 import {AddButton} from './AddButton'
 import {isInside} from '../util/functions'
-import {point} from '../types'
+import {getShift} from '../util/functions'
+import {line} from '../types'
+import {clone} from '../util/functions'
+import {insert} from '../util/functions'
 
-export const Line = ({i,points,setPoints, direction}:any) => {
+export const Line = ({i,points,setPoints, direction}:line) => {
 
   const lineRef = useRef<SVGLineElement>(null)
   const addRef  = useRef<SVGGElement>(null)
   
   const handleMouseMove = (e:any) => {
+    console.log(i, i2)
     setPoints(prev => {
       const newPoints = [...prev]
 
@@ -26,6 +30,7 @@ export const Line = ({i,points,setPoints, direction}:any) => {
   }
   
   const handleMouseUp = () => {
+    console.log(points)
     window.removeEventListener('mousemove', handleMouseMove)
     window.removeEventListener('mouseup', handleMouseUp)
   }
@@ -43,6 +48,14 @@ export const Line = ({i,points,setPoints, direction}:any) => {
   const handleMouseLeave = () => {
     lineRef.current.classList.remove('active')
     addRef.current.classList.remove('active')
+  }
+
+  const splitLine = () => {
+    const centerPoint = {x: (points[i].x + points[i2].x) / 2, y: (points[i].y + points[i2].y) / 2}
+    const centerPoints = clone([centerPoint, centerPoint])
+    const newPoints = insert(points, i2, centerPoints)
+    console.log(newPoints)
+    setPoints(newPoints)
   }
 
   const i2 = i + 1 === points.length ? 0 : i + 1
@@ -65,13 +78,7 @@ export const Line = ({i,points,setPoints, direction}:any) => {
     <>
       <line className='hitbox-line' {...line} {...handlers} />
       <line className='line' {...line} onMouseDown = {handleMouseDown} ref={lineRef}/>
-      <AddButton {...line} addRef={addRef} position = {buttonPos}/>
+      <AddButton handleClick = {splitLine}  addRef={addRef} position = {buttonPos}/>
     </>
   )
 }
-
-const getShift = (direction: any) => {
-  if (direction === 'horizontal') {return {x:0, y:-30}}
-  return {x:30, y:0}
-}
-
