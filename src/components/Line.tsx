@@ -3,8 +3,10 @@ import {AddButton} from './AddButton'
 import {isInside} from '../util/functions'
 import {getShift} from '../util/functions'
 import {line} from '../types'
+import {point} from '../types'
 import {clone} from '../util/functions'
 import {insert} from '../util/functions'
+import {Measure} from './Measure'
 
 export const Line = ({i,points,setPoints, direction}:line) => {
 
@@ -67,7 +69,12 @@ export const Line = ({i,points,setPoints, direction}:line) => {
   const testPoint1    = {x:(x1+x2)/2-24 + shift.x, y:(y1+y2)/2-24 + shift.y}
   const testPoint2    = {x:(x1+x2)/2-24 - shift.x, y:(y1+y2)/2-24 - shift.y}
   const pointIsInside = isInside(points, testPoint1)
-  const buttonPos = pointIsInside ? testPoint2 : testPoint1
+  const buttonPos     = pointIsInside ? testPoint2 : testPoint1
+  const length        = getLength(points[i],points[i2])
+  
+  const tp1    = {x:(x1+x2)/2 + shift.x, y:(y1+y2)/2 + shift.y}
+  const tp2    = {x:(x1+x2)/2 - shift.x, y:(y1+y2)/2 - shift.y}
+  const measurePos = pointIsInside ? tp2 : tp1
 
   const handlers = {
     onMouseEnter: handleMouseEnter,
@@ -78,7 +85,14 @@ export const Line = ({i,points,setPoints, direction}:line) => {
     <>
       <line className='hitbox-line' {...line} {...handlers} />
       <line className='line' {...line} onMouseDown = {handleMouseDown} ref={lineRef}/>
-      <AddButton handleClick = {splitLine}  addRef={addRef} position = {buttonPos}/>
+      <AddButton handleClick = {splitLine}  addRef={addRef} position = {buttonPos}/>\
+      <Measure position = {measurePos} length = {length}/>
     </>
   )
+}
+
+const getLength = (p1:point, p2:point) => {
+  const x = p2.x - p1.x
+  const y = p2.y - p1.y
+  return Math.sqrt(x*x + y*y)
 }
