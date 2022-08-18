@@ -3,18 +3,17 @@
   stroke-width: 12;
   stroke-linecap: round;
   opacity: 0;
+  transition: all 0.2s;
   &:hover{
     stroke: rgb(0, 255, 8);
     opacity: 1;
     cursor: all-scroll;
-    
   }
 }
 
 .hitbox-line{
   stroke: transparent;
   stroke-width: 60;
-  stroke-linecap: round;
 }
 
 .active{
@@ -26,15 +25,3 @@
     }
 }
 
-.add{
-  opacity: 0;
-}
-
-.group{
-  &:hover{
-    path{
-      opacity: 1;
-      cursor:pointer;
-    }
-  }
-}

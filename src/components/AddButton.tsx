@@ -1,11 +1,13 @@
 export const AddButton = ({handleClick, addRef, position}) => {
+
+  const a = 2
+
   return (
-    <g ref = {addRef} onClick = {handleClick}  className = 'group' transform = {`translate(${position.x}, ${position.y})`}>
-      <path  className = 'add' fill="#4caf50" d="M44,24c0,11.045-8.955,20-20,20S4,35.045,4,24S12.955,4,24,4S44,12.955,44,24z"/>
-      <path  className = 'add' fill="#fff" d="M21,14h6v20h-6V14z"/>
-      <path  className = 'add' fill="#fff" d="M14,21h20v6H14V21z"/>
+    <g className='add-button' ref = {addRef} onClick = {handleClick}>
+      <circle cx={position.x} cy={position.y - a} r="10"  stroke-width="3" fill="darkviolet" />
+      <line x1={position.x-6} y1={position.y - a} x2={position.x+6} y2={position.y - a} stroke-width="3" stroke="white" />
+      <line x1={position.x} y1={position.y-6 - a} x2={position.x} y2={position.y+6 - a} stroke-width="3" stroke="white" />
     </g>
   )
 }
 
-// this function replaces an element in an array with a new array
