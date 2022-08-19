@@ -1,0 +1,13 @@
+.add-button{
+  transition: all 0.2s;
+
+  opacity: 0;
+  &:hover{
+      opacity: 1;
+      cursor:pointer;
+  }
+
+  &.active{
+    opacity: 1;
+  }
+}

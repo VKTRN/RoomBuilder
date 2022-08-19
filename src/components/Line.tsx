@@ -43,6 +43,8 @@ export const Line = ({i,points,setPoints, direction}:line) => {
   }
   
   const handleMouseEnter = () => {
+    
+
     lineRef.current.classList.add('active')
     addRef.current.classList.add('active')
   }
@@ -53,7 +55,7 @@ export const Line = ({i,points,setPoints, direction}:line) => {
   }
 
   const splitLine = () => {
-    const centerPoint = {x: (points[i].x + points[i2].x) / 2, y: (points[i].y + points[i2].y) / 2}
+    const centerPoint = {x: Math.floor((points[i].x + points[i2].x) / 2) , y: Math.floor((points[i].y + points[i2].y) / 2)}
     const centerPoints = clone([centerPoint, centerPoint])
     const newPoints = insert(points, i2, centerPoints)
     console.log(newPoints)
@@ -65,9 +67,14 @@ export const Line = ({i,points,setPoints, direction}:line) => {
   const {x:x1, y:y1}  = points[i]
   const {x:x2, y:y2}  = points[i2]
   const line          = {x1, y1, x2, y2}
+  const lineLength    = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+  const lineStart     = {x: x1 + (30) * (x2 - x1) / lineLength, y: y1 + (30) * (y2 - y1) / lineLength}
+  const lineEnd       = {x: x1 + (lineLength -30) * (x2 - x1) / lineLength, y: y1 + (lineLength -30) * (y2 - y1) / lineLength}
+  const hitboxLine    = {x1: lineStart.x, y1: lineStart.y, x2: lineEnd.x, y2: lineEnd.y}
   const shift         = getShift(direction)
-  const testPoint1    = {x:(x1+x2)/2-24 + shift.x, y:(y1+y2)/2-24 + shift.y}
-  const testPoint2    = {x:(x1+x2)/2-24 - shift.x, y:(y1+y2)/2-24 - shift.y}
+  const shift2        = direction === 'horizontal' ? {x: 30, y:0} : {x: 0, y:30}
+  const testPoint1    = {x:(x1*.5+x2*.5) + shift.x + shift2.x, y:(y1*.5+y2*.5) + shift.y - shift2.y} // outer
+  const testPoint2    = {x:(x1*.5+x2*.5) - shift.x + shift2.x, y:(y1*.5+y2*.5) - shift.y - shift2.y} // inner
   const pointIsInside = isInside(points, testPoint1)
   const buttonPos     = pointIsInside ? testPoint2 : testPoint1
   const length        = getLength(points[i],points[i2])
@@ -83,8 +90,10 @@ export const Line = ({i,points,setPoints, direction}:line) => {
 
   return (
     <>
-      <line className='hitbox-line' {...line} {...handlers} />
-      <line className='line' {...line} onMouseDown = {handleMouseDown} ref={lineRef}/>
+      <g {...handlers}>
+        <line className='hitbox-line' {...hitboxLine}  />
+        <line className='line' {...line} onMouseDown = {handleMouseDown} ref={lineRef}/>
+      </g>
       <AddButton handleClick = {splitLine}  addRef={addRef} position = {buttonPos}/>\
       <Measure position = {measurePos} length = {length}/>
     </>

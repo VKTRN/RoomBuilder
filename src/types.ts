@@ -18,3 +18,8 @@ export type line = {
 export type polyline = {
   points: point[],
 }
+
+export type measure = {
+  position: point,
+  length: number,
+}
