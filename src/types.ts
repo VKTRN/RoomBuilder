@@ -3,6 +3,11 @@ export type point = {
   y: number,
 }
 
+export type rectangle = {
+  p1: point,
+  p2: point,
+}
+
 export type walls = {
   points: point[],
   setPoints: React.Dispatch<React.SetStateAction<point[]>>
