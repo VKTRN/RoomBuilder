@@ -1,8 +1,10 @@
 import {getPolyline} from '../util/functions'
-import {rectangle} from '../types'
+import {polyline} from '../types'
+import {point} from '../types'
 import {Polyline} from './Polyline'
 
-export const Furniture = ({rect}:rectangle) => {
+export const Furniture = ({points}:polyline) => {
+
   
   const handleClick = () => {
     console.log('clicked')
@@ -10,7 +12,7 @@ export const Furniture = ({rect}:rectangle) => {
   
   return (
     <g onClick = {handleClick}>
-      <Polyline points={getRectangle(rect.p1, rect.p2)}/>
+      <Polyline points={getRectangle(points[0], points[1])}/>
     </g>
   )
 }
