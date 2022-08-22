@@ -1,0 +1,14 @@
+.furniture{
+  .polyline{
+    fill: red;
+  }
+
+  &.selected{
+    .polyline{
+      
+      stroke: rgb(255, 255, 255) ;
+      cursor: move;
+    }
+  }
+}
+

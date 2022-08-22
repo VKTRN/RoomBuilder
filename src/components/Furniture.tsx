@@ -2,16 +2,20 @@ import {getPolyline} from '../util/functions'
 import {polyline} from '../types'
 import {point} from '../types'
 import {Polyline} from './Polyline'
+import {useState} from 'react'
 
 export const Furniture = ({points}:polyline) => {
 
+  const [selected, setSelected] = useState(false)
   
   const handleClick = () => {
-    console.log('clicked')
+    setSelected(!selected)
   }
+
+  const className = selected ? 'furniture selected' : 'furniture'
   
   return (
-    <g onClick = {handleClick}>
+    <g className={className} onClick={handleClick} >
       <Polyline points={getRectangle(points[0], points[1])}/>
     </g>
   )

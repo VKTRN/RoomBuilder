@@ -7,43 +7,35 @@ import {Furniture}  from './Furniture'
 import {useEffect}  from 'react'
 import {useRef}     from 'react'
 
-export const Editor = () => {
+export const Editor = ({furnitureDrawing, setFurnitureDrawing}: {furnitureDrawing: boolean, setFurnitureDrawing: React.Dispatch<React.SetStateAction<boolean>>}) => {
 
   const [points, setPoints]           = useState(initialPoints)
   const [furniture, setFurniture]     = useState<point[]>([])
-  const [virtualRect, setVirtualRect] = useState<point[]>([])
   const ref                           = useRef<SVGSVGElement>(null)
 
   const handleMouseDown = (e: React.SyntheticEvent) => {
-    // console.log('mouse down')
     const {offsetX, offsetY} = e.nativeEvent
-    setVirtualRect([{x: offsetX, y: offsetY}])
-    setFurniture([{x: offsetX, y: offsetY}])
-  }
-  
-  const handleMouseUp = (e: React.SyntheticEvent) => {
-    const {offsetX, offsetY} = e.nativeEvent
-    setFurniture(prev => [prev[0],{x: offsetX, y: offsetY}])
-    setVirtualRect([])
+    setFurniture([{x: offsetX, y: offsetY}]) // set the first point of the furniture
   }
 
   const handleMouseMove = (e: React.SyntheticEvent) => {
-    if (e.buttons === 1) {
-      const {offsetX, offsetY} = e.nativeEvent
-      setVirtualRect(prev => [prev[0],{x: offsetX, y: offsetY}])
-    }
+    const {offsetX, offsetY} = e.nativeEvent
+    e.buttons === 1 && setFurniture(prev => [prev[0],{x: offsetX, y: offsetY}]) // set the second point of the furniture
+  }
+
+  const handleMouseUp = (e: React.SyntheticEvent) => {
+    setFurnitureDrawing(false)
   }
 
   const handlers = {
-    onMouseDown: handleMouseDown,
-    onMouseUp: handleMouseUp,
-    onMouseMove: handleMouseMove
+    onMouseDown: furnitureDrawing ? handleMouseDown : undefined,
+    onMouseMove: furnitureDrawing ? handleMouseMove : undefined,
+    onMouseUp:   furnitureDrawing ? handleMouseUp   : undefined
   }
 
   return (
-    <svg ref = {ref} className = 'editor' {...handlers}>
+    <svg ref = {ref} className='editor' {...handlers}>
       {furniture.length === 2 && <Furniture points={furniture}/>}
-      {virtualRect.length === 2 && <Furniture points={virtualRect}/>}
       {/* <Polyline points = {points} /> */}
       {/* <Walls points = {points} setPoints={setPoints}/> */}
     </svg>
