@@ -1,32 +1,42 @@
-import {getPolyline} from '../util/functions'
-import {polyline} from '../types'
-import {point} from '../types'
-import {Polyline} from './Polyline'
-import {useState} from 'react'
+import {useState}     from 'react'
+import {useContext}   from 'react'
+import {point}        from '../types'
+import {getRectangle} from '../util/functions'
+import {polyline}     from '../types'
+import {context}      from '../App'
+import {Polyline}     from './Polyline'
 
-export const Furniture = ({points}:polyline) => {
+export const Furniture = ({points, setPoints}:polyline) => {
 
   const [selected, setSelected] = useState(false)
+  const {mode} = useContext(context)
   
   const handleClick = () => {
-    setSelected(!selected)
+    // setSelected(!selected)
+  }
+
+  const handleMouseMove = (e) => {
+    if(e.buttons === 1){
+      const newPoints = [...points]
+      newPoints[0].x += e.nativeEvent.movementX
+      newPoints[1].x += e.nativeEvent.movementX
+      newPoints[0].y += e.nativeEvent.movementY
+      newPoints[1].y += e.nativeEvent.movementY
+      setPoints(newPoints)
+    } 
   }
 
   const className = selected ? 'furniture selected' : 'furniture'
+
+  const handlers = {
+    onClick: handleClick,
+    onMouseMove: mode === 'edit' ? handleMouseMove : undefined
+  }
   
   return (
-    <g className={className} onClick={handleClick} >
+    <g className={className} {...handlers}>
       <Polyline points={getRectangle(points[0], points[1])}/>
     </g>
   )
 }
 
-// a function that takes two points and returns a rectangle as an array of four points
-const getRectangle = (p1:point, p2:point) => {
-  return [
-    {x: p1.x, y: p1.y},
-    {x: p2.x, y: p1.y},
-    {x: p2.x, y: p2.y},
-    {x: p1.x, y: p2.y}
-  ]
-}

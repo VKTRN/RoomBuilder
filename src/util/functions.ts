@@ -55,3 +55,12 @@ export const insert = (arr:any[], index:number, newElements:any[]) => {
     ...arr.slice(index)
   ]
 }
+
+export const getRectangle = (p1:point, p2:point) => {
+  return [
+    {x: p1.x, y: p1.y},
+    {x: p2.x, y: p1.y},
+    {x: p2.x, y: p2.y},
+    {x: p1.x, y: p2.y}
+  ]
+}

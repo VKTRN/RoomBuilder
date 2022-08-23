@@ -1,3 +1,6 @@
+import {Dispatch}       from 'react'
+import {SetStateAction} from 'react'
+
 export type point = {
   x: number,
   y: number,
@@ -10,13 +13,13 @@ export type rectangle = {
 
 export type walls = {
   points: point[],
-  setPoints: React.Dispatch<React.SetStateAction<point[]>>
+  setPoints: Dispatch<SetStateAction<point[]>>
 }
 
 export type line = {
   i: number,
   points: point[],
-  setPoints: React.Dispatch<React.SetStateAction<point[]>>
+  setPoints: Dispatch<SetStateAction<point[]>>
   direction: string,
 }
 
@@ -27,4 +30,9 @@ export type polyline = {
 export type measure = {
   position: point,
   length: number,
+}
+
+export type editor = {
+  mode: string, 
+  setMode: Dispatch<SetStateAction<string>>
 }

@@ -1,6 +1,9 @@
 .furniture{
   .polyline{
     fill: red;
+    &:hover{
+      cursor: move;
+    }
   }
 
   &.selected{

@@ -1,19 +1,30 @@
-import {useState} from 'react'
-import {Editor}   from './components/Editor'
-import                 './scss/style.scss'
+import {useState}      from 'react'
+import {createContext} from 'react'
+import {Editor}        from './components/Editor'
+import                      './scss/style.scss'
+
+export const context = createContext({})
+const Provider = context.Provider
 
 export const App = () => {
 
-  const [furnitureDrawing, setFurnitureDrawing] = useState(false)
+  const [mode, setMode] = useState('edit')
 
   const handleClick = () => {
-    setFurnitureDrawing(!furnitureDrawing)
+    setMode(mode === 'draw' ? 'edit' : 'draw')
+  }
+
+  const state = {
+    mode,
+    setMode
   }
 
   return (
     <div className = 'app'>
-      <Editor furnitureDrawing={furnitureDrawing} setFurnitureDrawing={setFurnitureDrawing}/>
-      <button onClick = {handleClick}>draw furniture</button>
+      <Provider value={state}>
+        <Editor mode={mode} setMode={setMode}/>
+        <button onClick = {handleClick}>draw furniture</button>
+      </Provider>
     </div>
   )
 }
