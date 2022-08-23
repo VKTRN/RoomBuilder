@@ -4,26 +4,35 @@ import {SyntheticEvent} from 'react'
 import {initialPoints}  from '../shapes'
 import {point}          from '../types'
 import {editor}         from '../types'
+import {clone}          from '../util/functions'
 import {Walls}          from './Walls'
 import {Polyline}       from './Polyline'
-import {Furniture}      from './Furniture'
+import {Items}          from './Items'
 
 export const Editor = ({mode, setMode}: editor) => {
 
   const [points, setPoints]       = useState(initialPoints)
-  const [furniture, setFurniture] = useState<point[]>([])
+  const [items, setItems]         = useState<point[][]>([])
   const ref                       = useRef<SVGSVGElement>(null)
 
   // handlers
 
   const handleMouseDown = (e: SyntheticEvent) => {
     const {offsetX, offsetY} = e.nativeEvent
-    setFurniture([{x: offsetX, y: offsetY}]) // set the first point of the furniture
+    const newItems = clone(items)
+    newItems.push([{x: offsetX, y: offsetY}])
+    setItems(newItems) // set the first point of the Item
   }
 
   const handleMouseMove = (e: SyntheticEvent) => {
     const {offsetX, offsetY} = e.nativeEvent
-    e.buttons === 1 && setFurniture(prev => [prev[0],{x: offsetX, y: offsetY}]) // set the second point of the furniture
+    
+    if(e.buttons === 1) {
+      const newItems           = clone(items)
+      const i                  = newItems.length - 1
+      newItems[i]              = [newItems[i][0],{x: offsetX, y: offsetY}]
+      setItems(newItems)
+    } // set the second point of the Item
   }
 
   const handleMouseUp = (e: SyntheticEvent) => {
@@ -47,7 +56,7 @@ export const Editor = ({mode, setMode}: editor) => {
 
   return (
     <svg ref = {ref} className='editor' {...handlers}>
-      {furniture.length === 2 && <Furniture points={furniture} setPoints = {setFurniture}/>}
+      {items[items.length-1]?.length === 2 && <Items points={items} setPoints = {setItems}/>}
       {/* <Polyline points = {points} /> */}
       {/* <Walls points = {points} setPoints={setPoints}/> */}
     </svg>

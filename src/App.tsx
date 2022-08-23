@@ -23,7 +23,8 @@ export const App = () => {
     <div className = 'app'>
       <Provider value={state}>
         <Editor mode={mode} setMode={setMode}/>
-        <button onClick = {handleClick}>draw furniture</button>
+        <button onClick = {handleClick}>draw Item</button>
+        <span>{mode}</span>
       </Provider>
     </div>
   )
