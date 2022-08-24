@@ -1,19 +1,21 @@
 import {useState}       from 'react'
 import {useRef}         from 'react'
 import {SyntheticEvent} from 'react'
+import {useContext}     from 'react'
+import {clone}          from '../util/functions'
 import {initialPoints}  from '../shapes'
 import {point}          from '../types'
-import {editor}         from '../types'
-import {clone}          from '../util/functions'
+import {context}        from '../context'
 import {Walls}          from './Walls'
 import {Polyline}       from './Polyline'
 import {Items}          from './Items'
 
-export const Editor = ({mode, setMode}: editor) => {
+export const Editor = () => {
 
-  const [points, setPoints]       = useState(initialPoints)
-  const [items, setItems]         = useState<point[][]>([])
-  const ref                       = useRef<SVGSVGElement>(null)
+  const [points, setPoints] = useState(initialPoints)
+  const [items, setItems]   = useState<point[][]>([])
+  const {mode, setMode}     = useContext(context)
+  const ref                 = useRef<SVGSVGElement>(null)
 
   // handlers
 
@@ -32,7 +34,7 @@ export const Editor = ({mode, setMode}: editor) => {
       const i                  = newItems.length - 1
       newItems[i]              = [newItems[i][0],{x: offsetX, y: offsetY}]
       setItems(newItems)
-    } // set the second point of the Item
+    } 
   }
 
   const handleMouseUp = (e: SyntheticEvent) => {
@@ -56,9 +58,9 @@ export const Editor = ({mode, setMode}: editor) => {
 
   return (
     <svg ref = {ref} className='editor' {...handlers}>
-      {items[items.length-1]?.length === 2 && <Items points={items} setPoints = {setItems}/>}
-      {/* <Polyline points = {points} /> */}
-      {/* <Walls points = {points} setPoints={setPoints}/> */}
+      <Polyline points={points} />
+      <Walls points={points} setPoints={setPoints}/>
+      {items[items.length-1]?.length === 2 && <Items/>}
     </svg>
   )
 }

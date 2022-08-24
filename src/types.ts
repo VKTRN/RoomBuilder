@@ -1,6 +1,8 @@
 import {Dispatch}       from 'react'
 import {SetStateAction} from 'react'
 
+export type Mode = 'draw' | 'edit'
+
 export type point = {
   x: number,
   y: number,
@@ -35,4 +37,13 @@ export type measure = {
 export type editor = {
   mode: string, 
   setMode: Dispatch<SetStateAction<string>>
+}
+
+export type State = {
+  mode: Mode
+  points: point[]
+  items: point[][]
+  setMode: Dispatch<SetStateAction<Mode>>
+  setPoints: Dispatch<SetStateAction<point[]>>
+  setItems: Dispatch<SetStateAction<point[][]>>
 }

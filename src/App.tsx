@@ -1,28 +1,34 @@
 import {useState}      from 'react'
-import {createContext} from 'react'
+import {Provider}      from './context'
 import {Editor}        from './components/Editor'
+import {Mode}          from './types'
+import {State}         from './types'
+import {point}         from './types'
 import                      './scss/style.scss'
-
-export const context = createContext({})
-const Provider = context.Provider
 
 export const App = () => {
 
-  const [mode, setMode] = useState('edit')
+  const [mode, setMode]    = useState<Mode>('edit')
+  const [points, setPoints] = useState<point[]>([])
+  const [items, setItems]   = useState<point[][]>([])
 
   const handleClick = () => {
     setMode(mode === 'draw' ? 'edit' : 'draw')
   }
 
-  const state = {
+  const state: State = {
     mode,
-    setMode
+    points,
+    items,
+    setMode,
+    setPoints,
+    setItems
   }
 
   return (
     <div className = 'app'>
       <Provider value={state}>
-        <Editor mode={mode} setMode={setMode}/>
+        <Editor/>
         <button onClick = {handleClick}>draw Item</button>
         <span>{mode}</span>
       </Provider>
