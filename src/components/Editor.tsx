@@ -8,18 +8,16 @@ import {context}        from '../context'
 import {Walls}          from './Walls'
 import {Polyline}       from './Polyline'
 import {Items}          from './Items'
+import {Room}           from './Room'
 
 export const Editor = () => {
 
-  const [points, setPoints] = useState(initialPoints)
   const {items, setItems}   = useContext(context)
   const {mode, setMode}     = useContext(context)
 
   // handlers
 
   const handleMouseDown = (e: SyntheticEvent<SVGElement, MouseEvent>) => {
-    console.log('handleMouseDown')
-    console.log(e)
     const {offsetX, offsetY} = e.nativeEvent
     const newItems = clone(items)
     newItems.push([{x: offsetX, y: offsetY}])
@@ -27,7 +25,6 @@ export const Editor = () => {
   }
 
   const handleMouseMove = (e: SyntheticEvent<SVGElement, MouseEvent>) => {
-    console.log('handleMouseMove')
     const {offsetX, offsetY} = e.nativeEvent
     
     if(e.nativeEvent.buttons === 1) {
@@ -38,8 +35,7 @@ export const Editor = () => {
     } 
   }
 
-  const handleMouseUp = (e: SyntheticEvent<SVGElement, MouseEvent>) => {
-    console.log('handleMouseUp')
+  const handleMouseUp = () => {
     setMode('edit')
   }
 
@@ -60,9 +56,8 @@ export const Editor = () => {
 
   return (
     <svg className='editor' {...handlers}>
-      <Polyline points={points} />
-      <Walls points={points} setPoints={setPoints}/>
       <Items/>
+      <Room initialPoints={initialPoints}/>
     </svg>
   )
 }

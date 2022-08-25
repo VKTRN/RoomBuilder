@@ -1,12 +1,12 @@
-import {useRef} from 'react' 
+import {useRef}    from 'react' 
+import {getShift}  from '../util/functions'
+import {isInside}  from '../util/functions'
+import {clone}     from '../util/functions'
+import {insert}    from '../util/functions'
+import {line}      from '../types'
+import {point}     from '../types'
 import {AddButton} from './AddButton'
-import {isInside} from '../util/functions'
-import {getShift} from '../util/functions'
-import {line} from '../types'
-import {point} from '../types'
-import {clone} from '../util/functions'
-import {insert} from '../util/functions'
-import {Measure} from './Measure'
+import {Measure}   from './Measure'
 
 export const Line = ({i,points,setPoints, direction}:line) => {
 
@@ -43,8 +43,6 @@ export const Line = ({i,points,setPoints, direction}:line) => {
   }
   
   const handleMouseEnter = () => {
-    
-
     lineRef.current.classList.add('active')
     addRef.current.classList.add('active')
   }
