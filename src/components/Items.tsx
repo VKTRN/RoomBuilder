@@ -1,4 +1,5 @@
 import {useContext}   from 'react'
+import {SyntheticEvent} from 'react'
 import {getRectangle} from '../util/functions'
 import {clone}        from '../util/functions'
 import {context}      from '../context'
@@ -9,8 +10,8 @@ export const Items = () => {
   const {items, setItems}       = useContext(context)
   const {mode}                  = useContext(context)
 
-  const handleMouseMove = (e:any , i: number) => {
-    if(e.buttons === 1){
+  const handleMouseMove = (e:SyntheticEvent<SVGElement, MouseEvent> , i: number) => {
+    if(e.nativeEvent.buttons === 1){
       const newItems = clone(items)
       newItems[i][0].x += e.nativeEvent.movementX
       newItems[i][1].x += e.nativeEvent.movementX
@@ -19,17 +20,24 @@ export const Items = () => {
       setItems(newItems)
     } 
   }
-  
-  return (
-    <>
+
+  {
+    return items[items.length-1]?.length === 2 ?  (
+      <>
       {items.map((item, i) => {
+
+        const handler = mode === 'edit' ? (e: SyntheticEvent<SVGElement, MouseEvent>)=> handleMouseMove(e,i) : undefined
+
         return (
-          <g className='item' onMouseMove = {mode === 'edit' ? (e)=> handleMouseMove(e,i) : undefined}>
-            <Polyline points={getRectangle(item[0], item[1])}/>
+          <g className='item' onMouseMove={handler}>
+            <Polyline points={getRectangle(item)}/>
           </g>
         )
       })}
     </>
-  )
+    )
+    :
+    <></>
+  }
 }
 

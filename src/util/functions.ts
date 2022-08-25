@@ -56,11 +56,11 @@ export const insert = (arr:any[], index:number, newElements:any[]) => {
   ]
 }
 
-export const getRectangle = (p1:point, p2:point) => {
+export const getRectangle = (points:point[]) => {
   return [
-    {x: p1.x, y: p1.y},
-    {x: p2.x, y: p1.y},
-    {x: p2.x, y: p2.y},
-    {x: p1.x, y: p2.y}
+    {x: points[0].x, y: points[0].y},
+    {x: points[1].x, y: points[0].y},
+    {x: points[1].x, y: points[1].y},
+    {x: points[0].x, y: points[1].y}
   ]
 }

@@ -8,7 +8,7 @@ import                      './scss/style.scss'
 
 export const App = () => {
 
-  const [mode, setMode]    = useState<Mode>('edit')
+  const [mode, setMode]     = useState<Mode>('edit')
   const [points, setPoints] = useState<point[]>([])
   const [items, setItems]   = useState<point[][]>([])
 
