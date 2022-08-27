@@ -8,21 +8,24 @@ import                      './scss/style.scss'
 
 export const App = () => {
 
-  const [mode, setMode]     = useState<Mode>('edit')
-  const [points, setPoints] = useState<point[]>([])
-  const [items, setItems]   = useState<point[][]>([])
+  const [selected, setSelected] = useState<number>(-1)
+  const [points, setPoints]     = useState<point[]>([])
+  const [items, setItems]       = useState<point[][]>([])
+  const [mode, setMode]         = useState<Mode>('edit')
 
   const handleClick = () => {
     setMode(mode === 'draw' ? 'edit' : 'draw')
   }
 
   const state: State = {
-    mode,
+    selected,
     points,
     items,
-    setMode,
+    mode,
+    setSelected,    
     setPoints,
-    setItems
+    setItems,
+    setMode,
   }
 
   return (

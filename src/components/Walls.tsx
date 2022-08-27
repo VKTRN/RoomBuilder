@@ -2,7 +2,7 @@ import {getDirection} from '../util/functions'
 import {Line}         from './Line'
 import {walls}        from '../types'
 
-export const Walls = ({points, setPoints}: walls) => {
+export const Walls = ({points, setPoints}: any) => {
   return (
     <>
       {
@@ -12,7 +12,6 @@ export const Walls = ({points, setPoints}: walls) => {
           const direction = isLastPoint
             ? getDirection(point, points[0]) 
             : getDirection(point, points[i+1])
-
           
             return <Line  i={i} points={points} setPoints={setPoints} direction={direction} />
         }

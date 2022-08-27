@@ -1,34 +1,82 @@
-import {useRef}    from 'react' 
-import {getShift}  from '../util/functions'
-import {isInside}  from '../util/functions'
-import {clone}     from '../util/functions'
-import {insert}    from '../util/functions'
-import {line}      from '../types'
-import {point}     from '../types'
-import {AddButton} from './AddButton'
-import {Measure}   from './Measure'
+import {useRef}     from 'react' 
+import {useContext} from 'react'
+import {getShift}   from '../util/functions'
+import {isInside}   from '../util/functions'
+import {clone}      from '../util/functions'
+import {insert}     from '../util/functions'
+import {context}    from '../context'
+import {line}       from '../types'
+import {point}      from '../types'
+import {AddButton}  from './AddButton'
+import {Measure}    from './Measure'
 
-export const Line = ({i,points,setPoints, direction}:line) => {
+
+export const Line = ({i,points,setPoints, direction}:any) => {
 
   const lineRef = useRef<SVGLineElement>(null)
   const addRef  = useRef<SVGGElement>(null)
+  const {selected}            = useContext(context)
+
   
   const handleMouseMove = (e:any) => {
-    console.log(i, i2)
+    e.stopPropagation()
+    // setPoints(prev => {
+    //     const newPoints = [...prev]
+
+    //     if(direction === 'horizontal'){
+    //       newPoints[i].y += e.movementY
+    //       newPoints[i2].y += e.movementY
+    //     }
+    //     if(direction === 'vertical'){
+    //       newPoints[i].x += e.movementX
+    //       newPoints[i2].x += e.movementX
+    //     }
+    //     return newPoints
+    // })
+
     setPoints(prev => {
-      const newPoints = [...prev]
+      console.log(!prev[0]?.length)
+      const newValues = clone(prev)
+      
+      if(!prev[0]?.length){
+        if(direction === 'horizontal'){
+          newValues[i].y += e.movementY
+          newValues[i2].y += e.movementY
+        }
+        if(direction === 'vertical'){
+          newValues[i].x += e.movementX
+          newValues[i2].x += e.movementX
+        }
+        return newValues
+      }
+
+      console.log(selected, newValues)
 
       if(direction === 'horizontal'){
-        newPoints[i].y += e.movementY
-        newPoints[i2].y += e.movementY
+        newValues[selected][i].y += e.movementY
+        newValues[selected][i2].y += e.movementY
       }
       if(direction === 'vertical'){
-        newPoints[i].x += e.movementX
-        newPoints[i2].x += e.movementX
+        newValues[selected][i].x += e.movementX
+        newValues[selected][i2].x += e.movementX
       }
-      return newPoints
-    }
-    )
+      return newValues
+      
+      
+    })
+
+    // const newPoints = clone(points)
+    // if(direction === 'horizontal'){
+    //   newPoints[i].y += e.movementY
+    //   newPoints[i2].y += e.movementY
+    // }
+    // if(direction === 'vertical'){
+    //   newPoints[i].x += e.movementX
+    //   newPoints[i2].x += e.movementX
+    // }
+
+    // setPoints(newPoints)
+
   }
   
   const handleMouseUp = () => {
@@ -53,11 +101,23 @@ export const Line = ({i,points,setPoints, direction}:line) => {
   }
 
   const splitLine = () => {
-    const centerPoint = {x: Math.floor((points[i].x + points[i2].x) / 2) , y: Math.floor((points[i].y + points[i2].y) / 2)}
-    const centerPoints = clone([centerPoint, centerPoint])
-    const newPoints = insert(points, i2, centerPoints)
-    console.log(newPoints)
-    setPoints(newPoints)
+    console.log(points)
+    if(!points[0]?.length){
+      const centerPoint = {x: Math.floor((points[i].x + points[i2].x) / 2) , y: Math.floor((points[i].y + points[i2].y) / 2)}
+      const centerPoints = clone([centerPoint, centerPoint])
+      const newPoints = insert(points, i2, centerPoints)
+      setPoints(newPoints)
+
+    }
+    else{
+      const centerPoint = {x: Math.floor((points[selected][i].x + points[selected][i2].x) / 2) , y: Math.floor((points[selected][i].y + points[selected][i2].y) / 2)}
+      const centerPoints = clone([centerPoint, centerPoint])
+      const newPoints = insert(points, i2, centerPoints)
+      const newValues = clone(points)
+      newValues[selected] = newPoints
+      console.log(newValues)
+      setPoints(newValues)
+    }
   }
 
   const i2 = i + 1 === points.length ? 0 : i + 1

@@ -43,7 +43,9 @@ export type State = {
   mode: Mode
   points: point[]
   items: point[][]
+  selected: number
   setMode: Dispatch<SetStateAction<Mode>>
   setPoints: Dispatch<SetStateAction<point[]>>
   setItems: Dispatch<SetStateAction<point[][]>>
+  setSelected: Dispatch<SetStateAction<number>>
 }
