@@ -12,23 +12,23 @@ export const Items = () => {
   const {setSelected}     = useContext(context)
   const {mode}            = useContext(context)
 
+  console.log(items)
+
   const handleMouseMove = (e:SyntheticEvent<SVGElement, MouseEvent> , i: number) => {
-    // if(e.nativeEvent.buttons === 1){
-    //   const newItems = clone(items)
-    //   newItems[i][0].x += e.nativeEvent.movementX
-    //   newItems[i][1].x += e.nativeEvent.movementX
-    //   newItems[i][2].x += e.nativeEvent.movementX
-    //   newItems[i][3].x += e.nativeEvent.movementX
-    //   newItems[i][0].y += e.nativeEvent.movementY
-    //   newItems[i][1].y += e.nativeEvent.movementY
-    //   newItems[i][2].y += e.nativeEvent.movementY
-    //   newItems[i][3].y += e.nativeEvent.movementY
-    //   setItems(newItems)
-    // } 
+    if(e.nativeEvent.buttons === 1){
+      const newItems = clone(items)
+
+      newItems[i].map((point:any) => {
+        point.x += e.nativeEvent.movementX
+        point.y += e.nativeEvent.movementY
+      })
+
+      setItems(newItems)
+    } 
   }
 
   {
-    return items[items.length-1]?.length === 4 ?  (
+    return items[items.length-1]?.length >= 4 ?  (
       <>
       {items.map((item, i) => {
 
@@ -39,8 +39,6 @@ export const Items = () => {
           newItems[i] = f(newItems[i])
           setItems(newItems)
         }
-        
-        
 
         return (
           <g className='item' onMouseMove={handler} onClick={() => {setSelected(i)}}>

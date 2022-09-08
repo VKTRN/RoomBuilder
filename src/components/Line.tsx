@@ -102,22 +102,46 @@ export const Line = ({i,points,setPoints, direction}:any) => {
 
   const splitLine = () => {
     console.log(points)
-    if(!points[0]?.length){
-      const centerPoint = {x: Math.floor((points[i].x + points[i2].x) / 2) , y: Math.floor((points[i].y + points[i2].y) / 2)}
-      const centerPoints = clone([centerPoint, centerPoint])
-      const newPoints = insert(points, i2, centerPoints)
-      setPoints(newPoints)
+    // if(!points[0]?.length){
+    //   const centerPoint = {x: Math.floor((points[i].x + points[i2].x) / 2) , y: Math.floor((points[i].y + points[i2].y) / 2)}
+    //   const centerPoints = clone([centerPoint, centerPoint])
+    //   const newPoints = insert(points, i2, centerPoints)
+    //   setPoints(newPoints)
 
-    }
-    else{
-      const centerPoint = {x: Math.floor((points[selected][i].x + points[selected][i2].x) / 2) , y: Math.floor((points[selected][i].y + points[selected][i2].y) / 2)}
-      const centerPoints = clone([centerPoint, centerPoint])
-      const newPoints = insert(points, i2, centerPoints)
-      const newValues = clone(points)
-      newValues[selected] = newPoints
-      console.log(newValues)
-      setPoints(newValues)
-    }
+    // }
+    // else{
+    //   const centerPoint = {x: Math.floor((points[selected][i].x + points[selected][i2].x) / 2) , y: Math.floor((points[selected][i].y + points[selected][i2].y) / 2)}
+    //   const centerPoints = clone([centerPoint, centerPoint])
+    //   const newPoints = insert(points, i2, centerPoints)
+    //   const newValues = clone(points)
+    //   newValues[selected] = newPoints
+    //   console.log('hi')
+    //   console.log(newValues)
+    //   setPoints(newValues)
+    // }
+
+    console.log('hi')
+
+    setPoints(prev => {
+      if(!prev[0]?.length){
+        const centerPoint = {x: Math.floor((prev[i].x + prev[i2].x) / 2) , y: Math.floor((prev[i].y + prev[i2].y) / 2)}
+        const centerPoints = clone([centerPoint, centerPoint])
+        const newPoints = insert(prev, i2, centerPoints)
+        return newPoints
+      }
+      else{
+        console.log('ahoi')
+        console.log(prev,selected, i, i2)
+        console.log(prev[selected][i])
+        const centerPoint = {x: Math.floor((prev[selected][i].x + prev[selected][i2].x) / 2) , y: Math.floor((prev[selected][i].y + prev[selected][i2].y) / 2)}
+        const centerPoints = clone([centerPoint, centerPoint])
+        const newPoints = insert(prev[selected], i2, centerPoints)
+        const newValues = clone(prev)
+        newValues[selected] = newPoints
+        return newValues
+      }
+    })
+
   }
 
   const i2 = i + 1 === points.length ? 0 : i + 1
