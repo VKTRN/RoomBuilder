@@ -41,8 +41,11 @@ export const Items = () => {
         }
 
         return (
-          <g className='item' onMouseMove={handler} onClick={() => {setSelected(i)}}>
-            <Polyline points={item}/>
+          <g className='item'  onClick={() => {setSelected(i)}}>
+            <g  onMouseMove={handler}>
+              <Polyline points={item}/>
+            </g>
+            
             <Walls points={item} setPoints = {setItems}/>
           </g>
         )

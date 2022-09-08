@@ -16,23 +16,9 @@ export const Line = ({i,points,setPoints, direction}:any) => {
   const lineRef = useRef<SVGLineElement>(null)
   const addRef  = useRef<SVGGElement>(null)
   const {selected}            = useContext(context)
-
   
   const handleMouseMove = (e:any) => {
     e.stopPropagation()
-    // setPoints(prev => {
-    //     const newPoints = [...prev]
-
-    //     if(direction === 'horizontal'){
-    //       newPoints[i].y += e.movementY
-    //       newPoints[i2].y += e.movementY
-    //     }
-    //     if(direction === 'vertical'){
-    //       newPoints[i].x += e.movementX
-    //       newPoints[i2].x += e.movementX
-    //     }
-    //     return newPoints
-    // })
 
     setPoints(prev => {
       console.log(!prev[0]?.length)
@@ -61,22 +47,7 @@ export const Line = ({i,points,setPoints, direction}:any) => {
         newValues[selected][i2].x += e.movementX
       }
       return newValues
-      
-      
     })
-
-    // const newPoints = clone(points)
-    // if(direction === 'horizontal'){
-    //   newPoints[i].y += e.movementY
-    //   newPoints[i2].y += e.movementY
-    // }
-    // if(direction === 'vertical'){
-    //   newPoints[i].x += e.movementX
-    //   newPoints[i2].x += e.movementX
-    // }
-
-    // setPoints(newPoints)
-
   }
   
   const handleMouseUp = () => {
@@ -85,7 +56,8 @@ export const Line = ({i,points,setPoints, direction}:any) => {
     window.removeEventListener('mouseup', handleMouseUp)
   }
   
-  const handleMouseDown = () => {
+  const handleMouseDown = (e) => {
+    e.stopPropagation()
     window.addEventListener('mousemove', handleMouseMove)
     window.addEventListener('mouseup', handleMouseUp)
   }
@@ -100,28 +72,8 @@ export const Line = ({i,points,setPoints, direction}:any) => {
     addRef.current.classList.remove('active')
   }
 
-  const splitLine = () => {
-    console.log(points)
-    // if(!points[0]?.length){
-    //   const centerPoint = {x: Math.floor((points[i].x + points[i2].x) / 2) , y: Math.floor((points[i].y + points[i2].y) / 2)}
-    //   const centerPoints = clone([centerPoint, centerPoint])
-    //   const newPoints = insert(points, i2, centerPoints)
-    //   setPoints(newPoints)
-
-    // }
-    // else{
-    //   const centerPoint = {x: Math.floor((points[selected][i].x + points[selected][i2].x) / 2) , y: Math.floor((points[selected][i].y + points[selected][i2].y) / 2)}
-    //   const centerPoints = clone([centerPoint, centerPoint])
-    //   const newPoints = insert(points, i2, centerPoints)
-    //   const newValues = clone(points)
-    //   newValues[selected] = newPoints
-    //   console.log('hi')
-    //   console.log(newValues)
-    //   setPoints(newValues)
-    // }
-
-    console.log('hi')
-
+  const splitLine = (e) => {
+    e.stopPropagation()
     setPoints(prev => {
       if(!prev[0]?.length){
         const centerPoint = {x: Math.floor((prev[i].x + prev[i2].x) / 2) , y: Math.floor((prev[i].y + prev[i2].y) / 2)}
@@ -130,9 +82,6 @@ export const Line = ({i,points,setPoints, direction}:any) => {
         return newPoints
       }
       else{
-        console.log('ahoi')
-        console.log(prev,selected, i, i2)
-        console.log(prev[selected][i])
         const centerPoint = {x: Math.floor((prev[selected][i].x + prev[selected][i2].x) / 2) , y: Math.floor((prev[selected][i].y + prev[selected][i2].y) / 2)}
         const centerPoints = clone([centerPoint, centerPoint])
         const newPoints = insert(prev[selected], i2, centerPoints)
@@ -141,7 +90,6 @@ export const Line = ({i,points,setPoints, direction}:any) => {
         return newValues
       }
     })
-
   }
 
   const i2 = i + 1 === points.length ? 0 : i + 1
@@ -176,7 +124,7 @@ export const Line = ({i,points,setPoints, direction}:any) => {
         <line className='hitbox-line' {...hitboxLine}  />
         <line className='line' {...line} onMouseDown = {handleMouseDown} ref={lineRef}/>
       </g>
-      <AddButton handleClick = {splitLine}  addRef={addRef} position = {buttonPos}/>\
+      <AddButton handleClick = {(e) => splitLine(e)}  addRef={addRef} position = {buttonPos}/>\
       <Measure position = {measurePos} length = {length}/>
     </>
   )
