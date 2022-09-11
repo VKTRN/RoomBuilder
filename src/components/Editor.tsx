@@ -5,7 +5,6 @@ import {initialPoints}  from '../shapes'
 import {context}        from '../context'
 import {Items}          from './Items'
 import {Room}           from './Room'
-import {TestItem}       from './TestItem'
 
 export const Editor = () => {
 
@@ -63,7 +62,6 @@ export const Editor = () => {
 
   return (
     <svg className='editor' {...handlers}>
-      {/* <TestItem/> */}
       <Room initialPoints={initialPoints}/>
       <Items/>
     </svg>

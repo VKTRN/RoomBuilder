@@ -6,8 +6,7 @@ const MiniCssExtractPlugin      = require('mini-css-extract-plugin')
 module.exports = {
   mode: 'development',
   entry: path.resolve(__dirname, './src/index.tsx'),
-  resolve: {
-    extensions:['.tsx', '.ts', '.js']},
+  resolve: {extensions:['.tsx', '.ts', '.js']},
   output: {
     path: path.resolve(__dirname, './build'),
     filename: 'bundle.js'
@@ -30,13 +29,13 @@ module.exports = {
     ]
   },
   plugins: [
-    new htmlWebpackPlugin({
-      template: path.resolve(__dirname, './public/index.html')
-    }),
+    new htmlWebpackPlugin({template: path.resolve(__dirname, './public/index.html')}),
     new ReactRefreshWebpackPlugin(),
     new MiniCssExtractPlugin()
   ],
   devServer: {
     hot: true,
+    open: true,
+    port: 3000,
   }
 }

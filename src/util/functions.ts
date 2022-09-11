@@ -64,3 +64,9 @@ export const getRectangle = (points:point[]) => {
     {x: points[0].x, y: points[1].y}
   ]
 }
+
+export const getLength = (p1:point, p2:point) => {
+  const x = p2.x - p1.x
+  const y = p2.y - p1.y
+  return Math.sqrt(x*x + y*y)
+}

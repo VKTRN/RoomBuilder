@@ -4,18 +4,18 @@ import {getShift}   from '../util/functions'
 import {isInside}   from '../util/functions'
 import {clone}      from '../util/functions'
 import {insert}     from '../util/functions'
+import {getLength}  from '../util/functions'
 import {context}    from '../context'
 import {line}       from '../types'
 import {point}      from '../types'
 import {AddButton}  from './AddButton'
 import {Measure}    from './Measure'
 
-
 export const Line = ({i,points,setPoints, direction}:any) => {
 
-  const lineRef = useRef<SVGLineElement>(null)
-  const addRef  = useRef<SVGGElement>(null)
-  const {selected}            = useContext(context)
+  const lineRef    = useRef<SVGLineElement>(null)
+  const addRef     = useRef<SVGGElement>(null)
+  const {selected} = useContext(context)
   
   const handleMouseMove = (e:any) => {
     e.stopPropagation()
@@ -27,11 +27,11 @@ export const Line = ({i,points,setPoints, direction}:any) => {
       if(!prev[0]?.length){
         if(direction === 'horizontal'){
           newValues[i].y += e.movementY
-          newValues[i2].y += e.movementY
+          newValues[j].y += e.movementY
         }
         if(direction === 'vertical'){
           newValues[i].x += e.movementX
-          newValues[i2].x += e.movementX
+          newValues[j].x += e.movementX
         }
         return newValues
       }
@@ -40,11 +40,11 @@ export const Line = ({i,points,setPoints, direction}:any) => {
 
       if(direction === 'horizontal'){
         newValues[selected][i].y += e.movementY
-        newValues[selected][i2].y += e.movementY
+        newValues[selected][j].y += e.movementY
       }
       if(direction === 'vertical'){
         newValues[selected][i].x += e.movementX
-        newValues[selected][i2].x += e.movementX
+        newValues[selected][j].x += e.movementX
       }
       return newValues
     })
@@ -76,15 +76,15 @@ export const Line = ({i,points,setPoints, direction}:any) => {
     e.stopPropagation()
     setPoints(prev => {
       if(!prev[0]?.length){
-        const centerPoint = {x: Math.floor((prev[i].x + prev[i2].x) / 2) , y: Math.floor((prev[i].y + prev[i2].y) / 2)}
+        const centerPoint = {x: Math.floor((prev[i].x + prev[j].x) / 2) , y: Math.floor((prev[i].y + prev[j].y) / 2)}
         const centerPoints = clone([centerPoint, centerPoint])
-        const newPoints = insert(prev, i2, centerPoints)
+        const newPoints = insert(prev, j, centerPoints)
         return newPoints
       }
       else{
-        const centerPoint = {x: Math.floor((prev[selected][i].x + prev[selected][i2].x) / 2) , y: Math.floor((prev[selected][i].y + prev[selected][i2].y) / 2)}
+        const centerPoint = {x: Math.floor((prev[selected][i].x + prev[selected][j].x) / 2) , y: Math.floor((prev[selected][i].y + prev[selected][j].y) / 2)}
         const centerPoints = clone([centerPoint, centerPoint])
-        const newPoints = insert(prev[selected], i2, centerPoints)
+        const newPoints = insert(prev[selected], j, centerPoints)
         const newValues = clone(prev)
         newValues[selected] = newPoints
         return newValues
@@ -92,25 +92,25 @@ export const Line = ({i,points,setPoints, direction}:any) => {
     })
   }
 
-  const i2 = i + 1 === points.length ? 0 : i + 1
+  const j = i + 1 === points.length ? 0 : i + 1
 
-  const {x:x1, y:y1}  = points[i]
-  const {x:x2, y:y2}  = points[i2]
-  const line          = {x1, y1, x2, y2}
-  const lineLength    = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
-  const lineStart     = {x: x1 + (30) * (x2 - x1) / lineLength, y: y1 + (30) * (y2 - y1) / lineLength}
-  const lineEnd       = {x: x1 + (lineLength -30) * (x2 - x1) / lineLength, y: y1 + (lineLength -30) * (y2 - y1) / lineLength}
-  const hitboxLine    = {x1: lineStart.x, y1: lineStart.y, x2: lineEnd.x, y2: lineEnd.y}
+  const p1    = points[i]
+  const p2    = points[j]
+  const line  = {p1, p2}
+  line.length = getLength(p1, p2)
+
+  const hitboxLine    = getHitbox(line, 30)
   const shift         = getShift(direction)
   const shift2        = direction === 'horizontal' ? {x: 30, y:0} : {x: 0, y:30}
-  const testPoint1    = {x:(x1*.5+x2*.5) + shift.x + shift2.x, y:(y1*.5+y2*.5) + shift.y - shift2.y} // outer
-  const testPoint2    = {x:(x1*.5+x2*.5) - shift.x + shift2.x, y:(y1*.5+y2*.5) - shift.y - shift2.y} // inner
+  const testPoint1    = {x:(p1.x*.5+p2.x*.5) + shift.x + shift2.x, y:(p1.y*.5+p2.y*.5) + shift.y - shift2.y} // outer
+  const testPoint2    = {x:(p1.x*.5+p2.x*.5) - shift.x + shift2.x, y:(p1.y*.5+p2.y*.5) - shift.y - shift2.y} // inner
   const pointIsInside = isInside(points, testPoint1)
   const buttonPos     = pointIsInside ? testPoint2 : testPoint1
-  const length        = getLength(points[i],points[i2])
+
+  const lineProps     = {x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y}
   
-  const tp1    = {x:(x1+x2)/2 + shift.x, y:(y1+y2)/2 + shift.y}
-  const tp2    = {x:(x1+x2)/2 - shift.x, y:(y1+y2)/2 - shift.y}
+  const tp1    = {x:(p1.x+p2.x)/2 + shift.x, y:(p1.y+p2.y)/2 + shift.y}
+  const tp2    = {x:(p1.x+p2.x)/2 - shift.x, y:(p1.y+p2.y)/2 - shift.y}
   const measurePos = pointIsInside ? tp2 : tp1
 
   const handlers = {
@@ -122,16 +122,21 @@ export const Line = ({i,points,setPoints, direction}:any) => {
     <>
       <g {...handlers}>
         <line className='hitbox-line' {...hitboxLine}  />
-        <line className='line' {...line} onMouseDown = {handleMouseDown} ref={lineRef}/>
+        <line className='line' {...lineProps} onMouseDown = {handleMouseDown} ref={lineRef}/>
       </g>
-      <AddButton handleClick = {(e) => splitLine(e)}  addRef={addRef} position = {buttonPos}/>\
-      <Measure position = {measurePos} length = {length}/>
+      <AddButton handleClick = {splitLine}  addRef={addRef} position = {buttonPos}/>\
+      <Measure position = {measurePos} length = {line.length}/>
     </>
   )
 }
 
-const getLength = (p1:point, p2:point) => {
-  const x = p2.x - p1.x
-  const y = p2.y - p1.y
-  return Math.sqrt(x*x + y*y)
+const getHitbox = (line, inset) => {
+  const {p1, p2} = line
+
+  const lineStart     = {x: p1.x + inset * (p2.x - p1.x) / line.length, y: p1.y + (inset) * (p2.y - p1.y) / line.length}
+  const lineEnd       = {x: p1.x + (line.length -inset) * (p2.x - p1.x) / line.length, y: p1.y + (line.length -inset) * (p2.y - p1.y) / line.length}
+
+  const hitboxLine    = {x1: lineStart.x, y1: lineStart.y, x2: lineEnd.x, y2: lineEnd.y}
+
+  return hitboxLine
 }
