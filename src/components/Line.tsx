@@ -92,26 +92,43 @@ export const Line = ({i,points,setPoints, direction}:any) => {
     })
   }
 
-  const j = i + 1 === points.length ? 0 : i + 1
+  const getMeasurePosition = (line) => {
+    const {p1, p2} = line
+    const shift         = getShift(direction)
+    const tp1    = {x:(p1.x+p2.x)/2 + shift.x, y:(p1.y+p2.y)/2 + shift.y}
+    const tp2    = {x:(p1.x+p2.x)/2 - shift.x, y:(p1.y+p2.y)/2 - shift.y}
+    const pointIsInside = isInside(points, tp1)
+    const measurePos = pointIsInside ? tp2 : tp1
+    return measurePos
+  }
 
-  const p1    = points[i]
-  const p2    = points[j]
-  const line  = {p1, p2}
-  line.length = getLength(p1, p2)
+  const getButtonPosition = (line) => {
+    const {p1, p2} = line
+    const shift         = getShift(direction)
+    const shift2        = direction === 'horizontal' ? {x: 30, y:0} : {x: 0, y:30}
+    const testPoint1    = {x:(p1.x*.5+p2.x*.5) + shift.x + shift2.x, y:(p1.y*.5+p2.y*.5) + shift.y - shift2.y} // outer
+    const testPoint2    = {x:(p1.x*.5+p2.x*.5) - shift.x + shift2.x, y:(p1.y*.5+p2.y*.5) - shift.y - shift2.y} // inner
+    const pointIsInside = isInside(points, testPoint1)
+    const buttonPos     = pointIsInside ? testPoint2 : testPoint1
+    return buttonPos
+  }
 
-  const hitboxLine    = getHitbox(line, 30)
-  const shift         = getShift(direction)
-  const shift2        = direction === 'horizontal' ? {x: 30, y:0} : {x: 0, y:30}
-  const testPoint1    = {x:(p1.x*.5+p2.x*.5) + shift.x + shift2.x, y:(p1.y*.5+p2.y*.5) + shift.y - shift2.y} // outer
-  const testPoint2    = {x:(p1.x*.5+p2.x*.5) - shift.x + shift2.x, y:(p1.y*.5+p2.y*.5) - shift.y - shift2.y} // inner
-  const pointIsInside = isInside(points, testPoint1)
-  const buttonPos     = pointIsInside ? testPoint2 : testPoint1
+  const getNextIndex = (points) => {
+    const j = i + 1 === points.length ? 0 : i + 1
+    return j
+  }
 
-  const lineProps     = {x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y}
+  const j      = getNextIndex(points)
+  const p1     = points[i]
+  const p2     = points[j]
+  const line   = {p1, p2}
+  const length = getLength(line)
+
+  const hitboxLine = getHitbox(line, 30)
+  const buttonPos  = getButtonPosition(line)
+  const measurePos = getMeasurePosition(line)
   
-  const tp1    = {x:(p1.x+p2.x)/2 + shift.x, y:(p1.y+p2.y)/2 + shift.y}
-  const tp2    = {x:(p1.x+p2.x)/2 - shift.x, y:(p1.y+p2.y)/2 - shift.y}
-  const measurePos = pointIsInside ? tp2 : tp1
+  const lineProps     = {x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y}
 
   const handlers = {
     onMouseEnter: handleMouseEnter,
@@ -125,16 +142,17 @@ export const Line = ({i,points,setPoints, direction}:any) => {
         <line className='line' {...lineProps} onMouseDown = {handleMouseDown} ref={lineRef}/>
       </g>
       <AddButton handleClick = {splitLine}  addRef={addRef} position = {buttonPos}/>\
-      <Measure position = {measurePos} length = {line.length}/>
+      <Measure position = {measurePos} length = {length}/>
     </>
   )
 }
 
 const getHitbox = (line, inset) => {
+  const length = getLength(line)
   const {p1, p2} = line
 
-  const lineStart     = {x: p1.x + inset * (p2.x - p1.x) / line.length, y: p1.y + (inset) * (p2.y - p1.y) / line.length}
-  const lineEnd       = {x: p1.x + (line.length -inset) * (p2.x - p1.x) / line.length, y: p1.y + (line.length -inset) * (p2.y - p1.y) / line.length}
+  const lineStart     = {x: p1.x + inset * (p2.x - p1.x) / length, y: p1.y + (inset) * (p2.y - p1.y) / length}
+  const lineEnd       = {x: p1.x + (length -inset) * (p2.x - p1.x) / length, y: p1.y + (length -inset) * (p2.y - p1.y) / length}
 
   const hitboxLine    = {x1: lineStart.x, y1: lineStart.y, x2: lineEnd.x, y2: lineEnd.y}
 
