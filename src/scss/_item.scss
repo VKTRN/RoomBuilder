@@ -1,6 +1,7 @@
 .item{
   .polyline{
-    fill: red;
+    fill: rgb(76, 120, 161);
+
     &:hover{
       cursor: move;
     }
@@ -8,10 +9,10 @@
 
   &.selected{
     .polyline{
-      
-      stroke: rgb(255, 255, 255) ;
+      fill: rgb(90, 142, 191);
       cursor: move;
     }
   }
 }
+
 
